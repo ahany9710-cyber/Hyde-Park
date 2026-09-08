@@ -14,7 +14,7 @@ export const config = {
 
   // معرف فورم Formspree (الفورم يبعت على الإيميل المسجل في formspree.io)
   // Formspree form ID (form submissions go to the email registered at formspree.io)
-  formspreeFormId: 'meelayjw',
+  formspreeFormId: 'xljeonla',
 
   // رقم الواتساب بالصيغة الدولية بدون + أو صفر بادئ (wa.me يرفض 01...)
   // WhatsApp number in international format, no + and no leading zero (wa.me rejects 01...)
