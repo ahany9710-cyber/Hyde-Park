@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { config } from '../config';
 import { trackConversion } from '../utils/gtag';
 
 const ThankYou = () => {
@@ -41,24 +42,25 @@ const ThankYou = () => {
             </svg>
           </motion.div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            شكراً! البروشور جاهز.
+            شكرًا، تم استلام طلبك.
           </h1>
           <p className="text-gray-600 text-lg mb-8">
-            سنتواصل معك خلال 10 دقائق.
+            فريق المبيعات سيتواصل معك قريبًا لتأكيد الأسعار الحالية والبروشور وتفاصيل الـ EOI.
           </p>
           <div className="space-y-4">
             <motion.a
-              href="./brochure.pdf"
-              download
+              href={`https://wa.me/${config.whatsappNumber}`}
+              target="_blank"
+              rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-block w-full px-8 py-4 bg-tatweer-orange text-white rounded-xl hover:bg-orange-600 transition-colors font-semibold shadow-lg"
+              className="inline-block w-full px-8 py-4 bg-hyde-forest text-white rounded-xl hover:bg-hyde-sage hover:text-hyde-forest transition-colors font-semibold shadow-lg"
             >
-              تحميل PDF
+              فتح واتساب
             </motion.a>
             <Link
               to="/"
-              className="block w-full px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:border-tatweer-orange hover:text-tatweer-orange transition-colors font-semibold"
+              className="block w-full px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:border-hyde-sage hover:text-hyde-forest transition-colors font-semibold"
             >
               العودة للصفحة الرئيسية
             </Link>

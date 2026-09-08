@@ -8,12 +8,14 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Cairo', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Playfair Display', 'Georgia', 'serif'],
       },
       colors: {
-        tatweer: {
-          orange: '#E85D04',
-          'orange-light': '#FF6B00',
-          navy: '#0f172a',
+        hyde: {
+          sage: '#8EB796',
+          forest: '#1F3324',
+          gold: '#C4A574',
+          mist: '#F4F1E8',
         },
       },
     },

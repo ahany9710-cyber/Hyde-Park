@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { config } from '../config';
+import BrandLogo from './BrandLogo';
 
 const Footer = () => {
   const scrollToForm = () => {
@@ -10,7 +11,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gray-900 text-gray-300">
+    <footer className="bg-hyde-forest text-gray-300">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           <motion.div
@@ -19,13 +20,10 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <img
-              src="./logos/tatweer-footer.png"
-              alt="Tatweer Misr"
-              className="h-10 w-auto object-contain invert mb-4"
-            />
+            <BrandLogo light className="mb-4" />
             <p className="text-gray-400 leading-relaxed">
-              IL Monte Galala - Marina Towers: مشروع عقاري فاخر من تطوير Tatweer Misr على 4,942 فدان في العين السخنة على البحر الأحمر. استلام 2030.
+              One Hyde Park في Hyde Park New Cairo يجمع بين الشقق والفيلات في مجتمع عصري تحيطه المساحات
+              الخضراء والخدمات اليومية وخطط سداد مرنة تناسب أنماط الحياة المختلفة.
             </p>
           </motion.div>
 
@@ -114,7 +112,7 @@ const Footer = () => {
           className="mt-12 pt-8 border-t border-gray-800 text-center text-sm text-gray-400"
         >
           <p>
-            &copy; {new Date().getFullYear()} Tatweer Misr. جميع الحقوق محفوظة.
+            &copy; {new Date().getFullYear()} Hyde Park Developments. جميع الحقوق محفوظة.
           </p>
           <p className="mt-2">
             إخلاء المسؤولية: جميع المعلومات المقدمة قابلة للتغيير. يرجى

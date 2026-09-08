@@ -6,11 +6,17 @@ import { config } from '../config';
 const FORMSPREE_ENDPOINT = `https://formspree.io/f/${config.formspreeFormId}`;
 
 const PROJECT_OPTIONS = [
-  { id: 'studios', name: 'Studios' },
-  { id: 'one-bedroom', name: 'One Bedroom' },
-  { id: 'two-bedrooms', name: 'Two Bedrooms' },
-  { id: 'executive', name: 'Executive Units' },
-  { id: 'penthouse', name: 'Penthouse' },
+  { id: '1-bedroom', name: '1 Bedroom Apartment' },
+  { id: '2-bedroom', name: '2 Bedroom Apartment' },
+  { id: '3-bedroom', name: '3 Bedroom Apartment' },
+  { id: '4-bedroom', name: '4 Bedroom Apartment' },
+  { id: 'duplex', name: 'Duplex' },
+  { id: 'garden-villa', name: 'Garden Villa' },
+  { id: 'sky-villa', name: 'Sky Villa' },
+  { id: 'townhouse', name: 'Townhouse' },
+  { id: 'twin-house', name: 'Twin House' },
+  { id: 'standalone-villa', name: 'Standalone Villa' },
+  { id: 'apartments-eoi', name: 'Apartments EOI' },
 ];
 
 interface FormData {
@@ -156,7 +162,7 @@ const LeadForm = () => {
             احصل على الأسعار وخطط الدفع والبروشور
           </h2>
           <p className="text-gray-600 text-center mb-8">
-            املأ النموذج أدناه وسنرسل لك جميع التفاصيل
+            املأ النموذج وسنرسل لك تفاصيل One Hyde Park، الأسعار الحالية، وخطة السداد المناسبة. EOI للشقق 100,000 جنيه قابل للاسترداد.
           </p>
 
           <motion.form
@@ -184,8 +190,8 @@ const LeadForm = () => {
                     className={`w-full px-4 py-3 rounded-xl border-2 transition-colors ${
                       errors.fullName
                         ? 'border-red-500 focus:border-red-500'
-                        : 'border-gray-300 focus:border-tatweer-orange'
-                    } focus:outline-none focus:ring-2 focus:ring-tatweer-orange focus:ring-offset-2`}
+                        : 'border-gray-300 focus:border-hyde-sage'
+                    } focus:outline-none focus:ring-2 focus:ring-hyde-sage focus:ring-offset-2`}
                     placeholder="أدخل اسمك الكامل"
                   />
                   {errors.fullName && (
@@ -210,8 +216,8 @@ const LeadForm = () => {
                     className={`w-full px-4 py-3 rounded-xl border-2 transition-colors ${
                       errors.phoneNumber
                         ? 'border-red-500 focus:border-red-500'
-                        : 'border-gray-300 focus:border-tatweer-orange'
-                    } focus:outline-none focus:ring-2 focus:ring-tatweer-orange focus:ring-offset-2`}
+                        : 'border-gray-300 focus:border-hyde-sage'
+                    } focus:outline-none focus:ring-2 focus:ring-hyde-sage focus:ring-offset-2`}
                     placeholder="+20 123 456 7890 (مع كود الدولة)"
                   />
                   {errors.phoneNumber && (
@@ -236,8 +242,8 @@ const LeadForm = () => {
                     className={`w-full px-4 py-3 rounded-xl border-2 transition-colors ${
                       errors.confirmPhoneNumber
                         ? 'border-red-500 focus:border-red-500'
-                        : 'border-gray-300 focus:border-tatweer-orange'
-                    } focus:outline-none focus:ring-2 focus:ring-tatweer-orange focus:ring-offset-2`}
+                        : 'border-gray-300 focus:border-hyde-sage'
+                    } focus:outline-none focus:ring-2 focus:ring-hyde-sage focus:ring-offset-2`}
                     placeholder="أدخل رقم إضافي إن وجد"
                   />
                   {errors.confirmPhoneNumber && (
@@ -257,7 +263,7 @@ const LeadForm = () => {
                         value="whatsapp"
                         checked={formData.contactMethod === 'whatsapp'}
                         onChange={(e) => handleChange('contactMethod', e.target.value)}
-                        className="w-4 h-4 text-tatweer-orange focus:ring-tatweer-orange"
+                        className="w-4 h-4 text-hyde-sage focus:ring-hyde-sage"
                       />
                       <span className="ml-2 text-gray-700">واتساب</span>
                     </label>
@@ -268,7 +274,7 @@ const LeadForm = () => {
                         value="call"
                         checked={formData.contactMethod === 'call'}
                         onChange={(e) => handleChange('contactMethod', e.target.value)}
-                        className="w-4 h-4 text-tatweer-orange focus:ring-tatweer-orange"
+                        className="w-4 h-4 text-hyde-sage focus:ring-hyde-sage"
                       />
                       <span className="ml-2 text-gray-700">مكالمة</span>
                     </label>
@@ -294,8 +300,8 @@ const LeadForm = () => {
                     className={`w-full px-4 py-3 rounded-xl border-2 transition-colors ${
                       errors.interestedProject
                         ? 'border-red-500 focus:border-red-500'
-                        : 'border-gray-300 focus:border-tatweer-orange'
-                    } focus:outline-none focus:ring-2 focus:ring-tatweer-orange focus:ring-offset-2`}
+                        : 'border-gray-300 focus:border-hyde-sage'
+                    } focus:outline-none focus:ring-2 focus:ring-hyde-sage focus:ring-offset-2`}
                   >
                     <option value="">اختر الوحدة المهتم بها</option>
                     {PROJECT_OPTIONS.map((project) => (
@@ -316,7 +322,7 @@ const LeadForm = () => {
                   whileTap={{ scale: isFormValid() && !isSubmitting ? 0.98 : 1 }}
                   className={`w-full px-6 py-4 rounded-xl font-semibold text-white transition-all duration-200 shadow-lg ${
                     isFormValid() && !isSubmitting
-                      ? 'bg-tatweer-orange hover:bg-orange-600 cursor-pointer'
+                      ? 'bg-hyde-forest hover:bg-hyde-sage hover:text-hyde-forest cursor-pointer'
                       : 'bg-gray-400 cursor-not-allowed'
                   }`}
                 >

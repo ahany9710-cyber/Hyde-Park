@@ -17,6 +17,12 @@
   }
 
   * {
-    @apply focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2;
+    @apply focus:outline-none focus:ring-2 focus:ring-hyde-sage focus:ring-offset-2;
+  }
+}
+
+@layer utilities {
+  .hero-gradient {
+    background: linear-gradient(180deg, rgba(31, 51, 36, 0.88) 0%, rgba(31, 51, 36, 0.52) 32%, rgba(31, 51, 36, 0.12) 58%, rgba(31, 51, 36, 0.72) 100%);
   }
 }

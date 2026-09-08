@@ -11,12 +11,12 @@ const faqs: FAQItem[] = [
   {
     question: 'هل التقسيط متاح؟',
     answer:
-      'نعم، IL Monte Galala - Marina Towers من تطوير Tatweer Misr يوفر خطط دفع مرنة تصل إلى 10 سنوات تقسيط. سيعمل فريقنا معك لإيجاد خطة تناسب ميزانيتك ووضعك المالي.',
+      'نعم، One Hyde Park يوفّر أكثر من خطة سداد بحسب نوع الوحدة: الشقق والدوبلكسات والسكاي فيلا والجاردن فيلا بخطة 5% مقدم و5% بعد 3 شهور وتقسيط حتى 10 سنوات، بينما الفيللات المستقلة بخطة تمتد حتى 8 سنوات.',
   },
   {
-    question: 'ما هو جدول التسليم؟',
+    question: 'ما هي تفاصيل الـ EOI؟',
     answer:
-      'تاريخ استلام مشروع IL Monte Galala - Marina Towers في العين السخنة على البحر الأحمر هو عام 2030. نحافظ على جداول بناء صارمة ونبقي عملاءنا على اطلاع طوال عملية التطوير مع تحديثات منتظمة حول التقدم.',
+      'نحن نجمع الآن EOI للشقق في Hyde Park New Cairo بقيمة 100,000 جنيه قابلة للاسترداد، مع متوسطات سعرية أولية تبدأ من 7 إلى 9 مليون للغرفة الواحدة وحتى 16 إلى 20 مليون للدوبلكسات.',
   },
   {
     question: 'كيف يمكنني زيارة الموقع؟',
@@ -45,7 +45,7 @@ const FAQ = () => {
             الأسئلة الشائعة
           </h2>
           <p className="text-gray-600 text-lg">
-            ابحث عن إجابات للأسئلة الشائعة حول عقاراتنا
+            أهم الأسئلة حول One Hyde Park وخطط السداد والتفاصيل الحالية
           </p>
         </motion.div>
 
@@ -61,7 +61,7 @@ const FAQ = () => {
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full px-6 py-4 text-right flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-tatweer-orange focus:ring-offset-2 rounded-2xl"
+                className="w-full px-6 py-4 text-right flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-hyde-sage focus:ring-offset-2 rounded-2xl"
                 aria-expanded={openIndex === index}
                 aria-controls={`faq-answer-${index}`}
               >
@@ -69,7 +69,7 @@ const FAQ = () => {
                   {faq.question}
                 </span>
                 <motion.svg
-                  className="w-5 h-5 text-tatweer-orange flex-shrink-0"
+                  className="w-5 h-5 text-hyde-sage flex-shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -101,7 +101,7 @@ const FAQ = () => {
                             يمكنك جدولة زيارة للموقع بالاتصال بنا على{' '}
                             <a
                               href={`tel:${config.phoneNumber}`}
-                              className="text-tatweer-orange font-semibold hover:underline"
+                              className="text-hyde-forest font-semibold hover:underline"
                             >
                               {config.phoneDisplay || config.phoneNumber}
                             </a>{' '}
@@ -109,7 +109,7 @@ const FAQ = () => {
                           </p>
                           <a
                             href={`tel:${config.phoneNumber}`}
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-tatweer-orange text-white rounded-xl font-semibold hover:bg-orange-600 transition-colors"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-hyde-forest text-white rounded-xl font-semibold hover:bg-hyde-sage hover:text-hyde-forest transition-colors"
                           >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
