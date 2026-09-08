@@ -1,40 +1,41 @@
 import type { Listing } from './listings';
 
-export const villaListings: Listing[] = [
+export interface VillaListing extends Listing {
+  landArea: string;
+}
+
+export const villaListings: VillaListing[] = [
   {
     id: '1',
-    name: 'Townhouse Middle & Corner',
-    area: '196 sqm BUA',
+    name: 'تاون هاوس وسط وركن',
+    chipLabel: 'تاون هاوس',
+    area: '196 م² BUA',
+    // TODO: confirm real land area per unit — placeholder pending sales team figures
+    landArea: '200 م² أرض (تقريبي)',
     image: './images/one-hyde-park/listings/two-bedroom.png',
-    tagline: 'Live closer to green in a townhouse collection',
-    downpayment: '5% down payment',
-    installment: '5% after 3 months + 8 years',
-    delivery: 'Delivery in 4 years',
-    finishing: 'Ask for current delivery specs',
-    priceRange: '25.7M - 31M EGP',
+    tagline: 'صف متلاصق بحديقة أمامية، أقرب بوابة للمجتمع.',
+    priceRange: '25.7 – 31 مليون ج',
   },
   {
     id: '2',
-    name: 'Twin House',
-    area: '218 sqm BUA',
+    name: 'توين هاوس',
+    chipLabel: 'توين هاوس',
+    area: '218 م² BUA',
+    // TODO: confirm real land area — placeholder pending sales team figures
+    landArea: '300 م² أرض (تقريبي)',
     image: './images/one-hyde-park/hero-family.png',
-    tagline: 'More privacy with landscaped surroundings',
-    downpayment: '5% down payment',
-    installment: '5% after 3 months + 8 years',
-    delivery: 'Delivery in 4 years',
-    finishing: 'Ask for current delivery specs',
-    priceRange: '37.5M EGP',
+    tagline: 'خصوصية أكبر بحائط مشترك واحد فقط، حديقة جانبية.',
+    priceRange: '37.5 مليون ج',
   },
   {
     id: '3',
-    name: 'Standalone Villa',
-    area: '220 sqm BUA',
+    name: 'فيلا مستقلة',
+    chipLabel: 'فيلا',
+    area: '220 م² BUA',
+    // TODO: confirm real land area — placeholder pending sales team figures
+    landArea: '450 م² أرض (تقريبي)',
     image: './images/one-hyde-park/listings/views-rise-above.png',
-    tagline: 'Signature villa living inside Hyde Park New Cairo',
-    downpayment: '5% down payment',
-    installment: '5% after 3 months + 8 years',
-    delivery: 'Delivery in 4 years',
-    finishing: 'Ask for current delivery specs',
-    priceRange: '48M EGP',
+    tagline: 'فيلا قائمة بذاتها على أربع واجهات، حديقة محيطة كاملة.',
+    priceRange: '48 مليون ج',
   },
 ];

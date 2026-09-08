@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { config } from '../config';
+import { trackChannelConversion } from '../utils/gtag';
 
 const FloatingActionBar = () => {
   const scrollToForm = () => {
@@ -16,11 +17,15 @@ const FloatingActionBar = () => {
       transition={{ duration: 0.5, delay: 0.3 }}
       className="fixed bottom-0 left-0 right-0 z-50 md:hidden"
     >
-      <div className="bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-2xl">
+      <div
+        className="bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-2xl"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
         <div className="container mx-auto px-4 py-3">
           <div className="grid grid-cols-3 gap-2">
             <motion.a
               href={`tel:${config.phoneNumber}`}
+              onClick={() => trackChannelConversion('call')}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="flex flex-col items-center justify-center px-3 py-3 bg-hyde-forest text-white rounded-xl hover:bg-hyde-sage hover:text-hyde-forest transition-all duration-200 shadow-lg"
@@ -45,6 +50,7 @@ const FloatingActionBar = () => {
               href={`https://wa.me/${config.whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackChannelConversion('whatsapp')}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="flex flex-col items-center justify-center px-3 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-all duration-200 shadow-lg"

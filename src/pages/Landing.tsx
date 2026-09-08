@@ -2,6 +2,7 @@ import Hero from '../components/Hero';
 import HeroInfoCard from '../components/HeroInfoCard';
 import ListingsCarousel from '../components/ListingsCarousel';
 import CommunitiesCarousel from '../components/CommunitiesCarousel';
+import MasterPlan from '../components/MasterPlan';
 import LeadForm from '../components/LeadForm';
 import FAQ from '../components/FAQ';
 import { apartmentListings } from '../data/listings';
@@ -21,16 +22,18 @@ const Landing = () => {
       <HeroInfoCard />
       <section id="new-launch">
         <ListingsCarousel
-          title="New Launch Apartments & Signature Homes"
-          subtitle="1 to 4 bedrooms, duplexes, sky villas, and garden villas with 5% down payment and 10 year installments."
-          badge="EOI averages: 1BR 7-9M | 2BR 9-11M | 3BR 11-14M | Duplex 16-20M"
+          title="الإطلاق الجديد"
+          subtitle="شقق من غرفة إلى 4 غرف، دوبلكس، جاردن فيلا وسكاي فيلا."
+          paymentEyebrow="خطة السداد — للمجموعة بالكامل"
+          paymentPlan="5% مقدم · 5% بعد 3 شهور · تقسيط 10 سنوات · EOI 100,000 ج قابل للاسترداد"
           listings={apartmentListings}
         />
       </section>
       <ListingsCarousel
-        title="Villa Collection"
-        subtitle="Townhouses, twin houses, and standalone villas with 5% now, 5% after 3 months, and equal installments over 8 years."
-        badge="Townhouse 25.7M-31M | Twin House 37.5M | Standalone 48M"
+        title="مجموعة الفيلات"
+        subtitle="تاون هاوس، توين هاوس وفيلات مستقلة بحديقة خاصة."
+        paymentEyebrow="خطة السداد — للمجموعة بالكامل"
+        paymentPlan="5% مقدم · 5% بعد 3 شهور · تقسيط 8 سنوات · تسليم 4 سنوات"
         listings={villaListings}
       />
       <section id="architecture-design" className="w-full px-4 sm:px-6 lg:px-8 py-12 md:py-20 bg-white">
@@ -50,23 +53,7 @@ const Landing = () => {
         </div>
       </section>
       <CommunitiesCarousel />
-      <section id="master-plan" className="w-full px-4 sm:px-6 lg:px-8 py-12 md:py-20 bg-hyde-forest">
-        <div className="container mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 text-center">
-            Master Plan
-          </h2>
-          <p className="text-gray-300 text-center mb-8">
-            One Hyde Park | Hyde Park New Cairo
-          </p>
-          <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden bg-gray-800 shadow-2xl border border-white/10">
-            <img
-              src="./images/one-hyde-park/master-plan.png"
-              alt="One Hyde Park master plan"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-      </section>
+      <MasterPlan />
       <LeadForm />
       <FAQ />
     </main>

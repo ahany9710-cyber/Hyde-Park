@@ -1,124 +1,100 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { config } from '../config';
+import { getAdAttribution, trackChannelConversion, trackCustomEvent } from '../utils/gtag';
+import { FORM_UNIT_OPTIONS, onUnitPreselectRequested, type FormUnitOption } from '../utils/unitSelection';
+import { wasMasterPlanPdfRequested } from '../utils/pdfDownload';
 
 const FORMSPREE_ENDPOINT = `https://formspree.io/f/${config.formspreeFormId}`;
 
-const PROJECT_OPTIONS = [
-  { id: '1-bedroom', name: '1 Bedroom Apartment' },
-  { id: '2-bedroom', name: '2 Bedroom Apartment' },
-  { id: '3-bedroom', name: '3 Bedroom Apartment' },
-  { id: '4-bedroom', name: '4 Bedroom Apartment' },
-  { id: 'duplex', name: 'Duplex' },
-  { id: 'garden-villa', name: 'Garden Villa' },
-  { id: 'sky-villa', name: 'Sky Villa' },
-  { id: 'townhouse', name: 'Townhouse' },
-  { id: 'twin-house', name: 'Twin House' },
-  { id: 'standalone-villa', name: 'Standalone Villa' },
-  { id: 'apartments-eoi', name: 'Apartments EOI' },
-];
+// TODO: real sales lead name and photo — placeholders until provided.
+const SALES_AGENT_NAME = 'مسؤول المبيعات';
+
+type ContactMethod = 'whatsapp' | 'call';
 
 interface FormData {
-  fullName: string;
-  phoneNumber: string;
-  confirmPhoneNumber: string;
-  contactMethod: 'whatsapp' | 'call' | '';
-  interestedProject: string;
+  phone: string;
+  unit: FormUnitOption | '';
+  contactMethod: ContactMethod;
 }
 
-interface FormErrors {
-  fullName?: string;
-  phoneNumber?: string;
-  confirmPhoneNumber?: string;
-  contactMethod?: string;
-  interestedProject?: string;
+/** Strips non-digits and any pasted +20 / 0020 / 20 country-code prefix, returning the local 01… form. */
+function sanitizePhoneInput(raw: string): string {
+  let digits = raw.replace(/[^\d]/g, '');
+  if (digits.startsWith('0020')) {
+    digits = digits.slice(4);
+  } else if (digits.startsWith('20') && digits.length > 10) {
+    digits = digits.slice(2);
+  }
+  if (digits.length === 10 && !digits.startsWith('0')) {
+    digits = `0${digits}`;
+  }
+  return digits.slice(0, 11);
+}
+
+function isValidEgyptianMobile(local: string): boolean {
+  return /^01[0125][0-9]{8}$/.test(local);
+}
+
+function toE164(local: string): string {
+  return `+20${local.slice(1)}`;
 }
 
 const LeadForm = () => {
   const navigate = useNavigate();
+  const phoneInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState<FormData>({
-    fullName: '',
-    phoneNumber: '',
-    confirmPhoneNumber: '',
-    contactMethod: '',
-    interestedProject: '',
+    phone: '',
+    unit: '',
+    contactMethod: 'whatsapp',
   });
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [phoneError, setPhoneError] = useState<string | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const validateField = (name: keyof FormData, value: string): string | undefined => {
-    switch (name) {
-      case 'fullName':
-        return undefined;
-      case 'phoneNumber':
-        if (!value.trim()) return 'رقم التواصل مطلوب';
-        if (!/^[0-9+\s-]+$/.test(value)) return 'يرجى إدخال رقم هاتف صحيح مع كود الدولة';
-        if (value.replace(/\D/g, '').length < 10) return 'يجب أن يكون رقم الهاتف على الأقل 10 أرقام مع كود الدولة';
-        return undefined;
-      case 'confirmPhoneNumber':
-        return undefined;
-      case 'contactMethod':
-        return undefined;
-      case 'interestedProject':
-        return undefined;
-      default:
-        return undefined;
-    }
-  };
-
-  const handleChange = (name: keyof FormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      const error = validateField(name, value);
-      setErrors((prev) => ({ ...prev, [name]: error }));
-    }
-  };
-
-  const handleBlur = (name: keyof FormData) => {
-    const error = validateField(name, formData[name]);
-    setErrors((prev) => {
-      const newErrors = { ...prev };
-      if (error) {
-        newErrors[name] = error;
-      } else {
-        delete newErrors[name];
-      }
-      return newErrors;
-    });
-  };
-
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-    (Object.keys(formData) as Array<keyof FormData>).forEach((key) => {
-      const error = validateField(key, formData[key]);
-      if (error) newErrors[key] = error;
-    });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  useEffect(() => onUnitPreselectRequested((unit) => setFormData((prev) => ({ ...prev, unit }))), []);
 
   const getThankYouPath = (): string => {
     const base = (typeof import.meta.env.BASE_URL === 'string' ? import.meta.env.BASE_URL : '').replace(/\.$/, '') || '/';
     return base === '/' ? '/thank-you' : `${base.replace(/\/$/, '')}/thank-you`;
   };
 
+  const handlePhoneChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, phone: sanitizePhoneInput(value) }));
+    if (phoneError) setPhoneError(undefined);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    setSubmitError(null);
+
+    if (!isValidEgyptianMobile(formData.phone)) {
+      setPhoneError('رقم الموبايل غير صحيح — يرجى إدخال رقم مصري صحيح (01...)');
+      phoneInputRef.current?.focus();
+      return;
+    }
+
     setIsSubmitting(true);
-    const errorMessage = 'حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى أو الاتصال بنا على الواتساب أو الهاتف.';
+    const pdfRequested = wasMasterPlanPdfRequested();
+
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('full_name', formData.fullName);
-      formDataToSend.append('phone', formData.phoneNumber);
-      formDataToSend.append('additional_phone', formData.confirmPhoneNumber);
+      formDataToSend.append('phone', toE164(formData.phone));
+      formDataToSend.append('interested_unit', formData.unit || 'لسه بختار');
       formDataToSend.append('contact_method', formData.contactMethod);
-      formDataToSend.append('interested_project', formData.interestedProject);
+      if (pdfRequested) formDataToSend.append('master_plan_pdf_requested', '1');
+      formDataToSend.append('_gotcha', '');
+
+      // Name the ad that produced this lead
+      Object.entries(getAdAttribution()).forEach(([key, value]) => {
+        formDataToSend.append(key, value);
+      });
 
       const res = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
         body: formDataToSend,
+        headers: { Accept: 'application/json' },
         redirect: 'manual',
       });
       const success =
@@ -127,208 +103,204 @@ const LeadForm = () => {
         res.status === 302 ||
         res.status === 303 ||
         res.type === 'opaqueredirect';
+
       if (success) {
-        navigate(getThankYouPath());
+        // Form-submit conversion fires once on /thank-you (see ThankYou.tsx), not here.
+        if (formData.contactMethod === 'whatsapp') trackCustomEvent('lead_prefers_whatsapp');
+        if (pdfRequested) trackCustomEvent('master_plan_pdf_delivered');
+        navigate(getThankYouPath(), {
+          state: { phone: toE164(formData.phone), unit: formData.unit || 'لسه بختار' },
+        });
         return;
       }
       setIsSubmitting(false);
-      alert(errorMessage);
+      setSubmitError('حدث خطأ أثناء الإرسال. جرب تاني أو كلمنا على واتساب مباشرة.');
     } catch {
       setIsSubmitting(false);
-      alert(errorMessage);
+      setSubmitError('حدث خطأ أثناء الإرسال. جرب تاني أو كلمنا على واتساب مباشرة.');
     }
   };
 
-  const isFormValid = () => {
-    // Check if phone number is filled
-    if (formData.phoneNumber.trim() === '') return false;
-    
-    // Check if there are any actual error messages (not undefined)
-    const hasErrors = Object.values(errors).some(error => error !== undefined && error !== '');
-    return !hasErrors;
+  const whatsappFallbackHref = () => {
+    const unitText = formData.unit || 'وحدة في المشروع';
+    const phoneText = formData.phone ? toE164(formData.phone) : '';
+    const message = `مرحباً، أنا مهتم بـ ${unitText}${phoneText ? ` — رقمي ${phoneText}` : ''}. ممكن أعرف الأسعار وخطة السداد؟`;
+    return `https://wa.me/${config.whatsappNumber}?text=${encodeURIComponent(message)}`;
   };
 
   return (
-    <section id="lead-form" className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
-      <div className="max-w-2xl mx-auto">
+    <section id="lead-form" className="w-full bg-hyde-mist" style={{ padding: '22px 16px 20px' }}>
+      <div className="container mx-auto max-w-md">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="bg-white rounded-2xl shadow-xl p-6 md:p-10"
+          className="bg-white rounded-2xl"
+          style={{ border: '1px solid #E3DFD2', padding: '20px 16px' }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 text-center">
-            احصل على الأسعار وخطط الدفع والبروشور
-          </h2>
-          <p className="text-gray-600 text-center mb-8">
-            املأ النموذج وسنرسل لك تفاصيل One Hyde Park، الأسعار الحالية، وخطة السداد المناسبة. EOI للشقق 100,000 جنيه قابل للاسترداد.
+          <h3 className="font-bold text-hyde-forest mb-2" style={{ fontSize: '22px', lineHeight: 1.3 }}>
+            استلم الأسعار وخطة السداد
+          </h3>
+          <p className="mb-5" style={{ fontSize: '14.5px', lineHeight: 1.6, color: '#5a6158' }}>
+            رقمك فقط — نبعتلك الأسعار الحالية والبروشور على واتساب.
           </p>
 
-          <motion.form
-            action={FORMSPREE_ENDPOINT}
-            method="POST"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            onSubmit={handleSubmit}
-            className="space-y-6"
-          >
-                <div>
-                  <label
-                    htmlFor="fullName"
-                    className="block text-sm font-medium text-gray-700 mb-2"
-                  >
-                    الاسم الكامل
-                  </label>
-                  <input
-                    type="text"
-                    id="fullName"
-                    name="full_name"
-                    value={formData.fullName}
-                    onChange={(e) => handleChange('fullName', e.target.value)}
-                    onBlur={() => handleBlur('fullName')}
-                    className={`w-full px-4 py-3 rounded-xl border-2 transition-colors ${
-                      errors.fullName
-                        ? 'border-red-500 focus:border-red-500'
-                        : 'border-gray-300 focus:border-hyde-sage'
-                    } focus:outline-none focus:ring-2 focus:ring-hyde-sage focus:ring-offset-2`}
-                    placeholder="أدخل اسمك الكامل"
-                  />
-                  {errors.fullName && (
-                    <p className="mt-1 text-sm text-red-500">{errors.fullName}</p>
-                  )}
-                </div>
+          <form onSubmit={handleSubmit} noValidate>
+            <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
-                <div>
-                  <label
-                    htmlFor="phoneNumber"
-                    className="block text-sm font-medium text-gray-700 mb-2"
-                  >
-                    رقم التواصل (واتساب) <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="tel"
-                    id="phoneNumber"
-                    name="phone"
-                    value={formData.phoneNumber}
-                    onChange={(e) => handleChange('phoneNumber', e.target.value)}
-                    onBlur={() => handleBlur('phoneNumber')}
-                    className={`w-full px-4 py-3 rounded-xl border-2 transition-colors ${
-                      errors.phoneNumber
-                        ? 'border-red-500 focus:border-red-500'
-                        : 'border-gray-300 focus:border-hyde-sage'
-                    } focus:outline-none focus:ring-2 focus:ring-hyde-sage focus:ring-offset-2`}
-                    placeholder="+20 123 456 7890 (مع كود الدولة)"
-                  />
-                  {errors.phoneNumber && (
-                    <p className="mt-1 text-sm text-red-500">{errors.phoneNumber}</p>
-                  )}
-                </div>
+            <label htmlFor="phone" className="block font-semibold mb-2" style={{ fontSize: '14px' }}>
+              رقم الموبايل
+            </label>
+            <div
+              className="flex items-center bg-white rounded-[13px] mb-1.5"
+              style={{
+                border: `1.5px solid ${phoneError ? '#8A2E1F' : '#1F3324'}`,
+                padding: '0 12px',
+                gap: '8px',
+              }}
+            >
+              <span
+                style={{ fontSize: '15px', color: '#5a6158', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}
+              >
+                +20
+              </span>
+              <span style={{ width: '1px', height: '26px', background: '#E3DFD2' }} />
+              <input
+                ref={phoneInputRef}
+                id="phone"
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                value={formData.phone}
+                onChange={(e) => handlePhoneChange(e.target.value)}
+                onPaste={(e) => {
+                  e.preventDefault();
+                  handlePhoneChange(e.clipboardData.getData('text'));
+                }}
+                placeholder="010 5555 0570"
+                aria-invalid={Boolean(phoneError)}
+                aria-describedby={phoneError ? 'phone-error' : undefined}
+                className="flex-1 bg-transparent outline-none"
+                style={{
+                  minHeight: '52px',
+                  fontSize: '17px',
+                  color: '#1F3324',
+                  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+                }}
+              />
+            </div>
+            {phoneError ? (
+              <p id="phone-error" className="mb-4" style={{ fontSize: '13px', color: '#8A2E1F' }}>
+                {phoneError}
+              </p>
+            ) : (
+              <div className="mb-4" />
+            )}
 
-                <div>
-                  <label
-                    htmlFor="confirmPhoneNumber"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+            <label className="block font-semibold mb-2" style={{ fontSize: '14px' }}>
+              الوحدة المهتم بها
+            </label>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {FORM_UNIT_OPTIONS.map((option) => {
+                const selected = formData.unit === option;
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => setFormData((prev) => ({ ...prev, unit: option }))}
+                    className={`rounded-full ${selected ? 'bg-hyde-forest text-white font-semibold' : 'bg-hyde-mist'}`}
+                    style={{ padding: '11px 15px', fontSize: '14px', border: selected ? undefined : '1px solid #DDD8CA' }}
+                    aria-pressed={selected}
                   >
-                    رقم إضافي للتواصل (اختياري)
-                  </label>
-                  <input
-                    type="tel"
-                    id="confirmPhoneNumber"
-                    name="additional_phone"
-                    value={formData.confirmPhoneNumber}
-                    onChange={(e) => handleChange('confirmPhoneNumber', e.target.value)}
-                    onBlur={() => handleBlur('confirmPhoneNumber')}
-                    className={`w-full px-4 py-3 rounded-xl border-2 transition-colors ${
-                      errors.confirmPhoneNumber
-                        ? 'border-red-500 focus:border-red-500'
-                        : 'border-gray-300 focus:border-hyde-sage'
-                    } focus:outline-none focus:ring-2 focus:ring-hyde-sage focus:ring-offset-2`}
-                    placeholder="أدخل رقم إضافي إن وجد"
-                  />
-                  {errors.confirmPhoneNumber && (
-                    <p className="mt-1 text-sm text-red-500">{errors.confirmPhoneNumber}</p>
-                  )}
-                </div>
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    طريقة الاتصال المفضلة
-                  </label>
-                  <div className="flex gap-4">
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="contact_method"
-                        value="whatsapp"
-                        checked={formData.contactMethod === 'whatsapp'}
-                        onChange={(e) => handleChange('contactMethod', e.target.value)}
-                        className="w-4 h-4 text-hyde-sage focus:ring-hyde-sage"
-                      />
-                      <span className="ml-2 text-gray-700">واتساب</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="contact_method"
-                        value="call"
-                        checked={formData.contactMethod === 'call'}
-                        onChange={(e) => handleChange('contactMethod', e.target.value)}
-                        className="w-4 h-4 text-hyde-sage focus:ring-hyde-sage"
-                      />
-                      <span className="ml-2 text-gray-700">مكالمة</span>
-                    </label>
-                  </div>
-                  {errors.contactMethod && (
-                    <p className="mt-1 text-sm text-red-500">{errors.contactMethod}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="interestedProject"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+            <label className="block font-semibold mb-2" style={{ fontSize: '14px' }}>
+              تحب نتواصل إزاي؟
+            </label>
+            <div className="grid grid-cols-2 gap-2 mb-5">
+              {(
+                [
+                  { id: 'whatsapp', label: 'واتساب' },
+                  { id: 'call', label: 'مكالمة' },
+                ] as { id: ContactMethod; label: string }[]
+              ).map((method) => {
+                const selected = formData.contactMethod === method.id;
+                return (
+                  <button
+                    key={method.id}
+                    type="button"
+                    onClick={() => setFormData((prev) => ({ ...prev, contactMethod: method.id }))}
+                    className={`rounded-[13px] flex items-center justify-center ${
+                      selected ? 'bg-hyde-sage text-hyde-forest font-bold' : 'bg-white font-semibold'
+                    }`}
+                    style={{ minHeight: '50px', fontSize: '15px', border: selected ? undefined : '1.5px solid #DDD8CA' }}
+                    aria-pressed={selected}
                   >
-                    الوحدة المهتم بها
-                  </label>
-                  <select
-                    id="interestedProject"
-                    name="interested_project"
-                    value={formData.interestedProject}
-                    onChange={(e) => handleChange('interestedProject', e.target.value)}
-                    onBlur={() => handleBlur('interestedProject')}
-                    className={`w-full px-4 py-3 rounded-xl border-2 transition-colors ${
-                      errors.interestedProject
-                        ? 'border-red-500 focus:border-red-500'
-                        : 'border-gray-300 focus:border-hyde-sage'
-                    } focus:outline-none focus:ring-2 focus:ring-hyde-sage focus:ring-offset-2`}
-                  >
-                    <option value="">اختر الوحدة المهتم بها</option>
-                    {PROJECT_OPTIONS.map((project) => (
-                      <option key={project.id} value={project.id}>
-                        {project.name}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.interestedProject && (
-                    <p className="mt-1 text-sm text-red-500">{errors.interestedProject}</p>
-                  )}
-                </div>
+                    {method.label}
+                  </button>
+                );
+              })}
+            </div>
 
-                <motion.button
-                  type="submit"
-                  disabled={isSubmitting}
-                  whileHover={{ scale: isFormValid() && !isSubmitting ? 1.02 : 1 }}
-                  whileTap={{ scale: isFormValid() && !isSubmitting ? 0.98 : 1 }}
-                  className={`w-full px-6 py-4 rounded-xl font-semibold text-white transition-all duration-200 shadow-lg ${
-                    isFormValid() && !isSubmitting
-                      ? 'bg-hyde-forest hover:bg-hyde-sage hover:text-hyde-forest cursor-pointer'
-                      : 'bg-gray-400 cursor-not-allowed'
-                  }`}
+            {submitError ? (
+              <div
+                className="rounded-xl mb-4"
+                style={{ padding: '12px 14px', background: 'rgba(138,46,31,0.08)', border: '1px solid #8A2E1F' }}
+              >
+                <p className="mb-2" style={{ fontSize: '13.5px', color: '#8A2E1F' }}>
+                  {submitError}
+                </p>
+                <a
+                  href={whatsappFallbackHref()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackChannelConversion('whatsapp')}
+                  className="inline-flex items-center justify-center w-full bg-hyde-forest text-white font-semibold rounded-lg"
+                  style={{ minHeight: '44px', fontSize: '14px' }}
                 >
-                  {isSubmitting ? 'جاري الإرسال...' : 'إرسال والحصول على البروشور'}
-                </motion.button>
-          </motion.form>
+                  تواصل معنا على واتساب بدلاً من ذلك
+                </a>
+              </div>
+            ) : null}
+
+            <motion.button
+              type="submit"
+              disabled={isSubmitting}
+              whileTap={{ scale: 0.98 }}
+              className="w-full bg-hyde-forest text-white font-bold rounded-[14px] flex items-center justify-center"
+              style={{ minHeight: '56px', fontSize: '17px', opacity: isSubmitting ? 0.8 : 1 }}
+            >
+              {isSubmitting ? 'جاري الإرسال...' : 'ابعت الأسعار والبروشور'}
+            </motion.button>
+
+            <p className="text-center mt-3" style={{ fontSize: '13px', lineHeight: 1.6, color: '#6b7269' }}>
+              اتصال خلال 15 دقيقة في أوقات العمل · بياناتك لا تُشارك مع أي طرف آخر
+            </p>
+
+            <div
+              className="flex items-center gap-3 mt-5"
+              style={{ paddingTop: '18px', borderTop: '1px solid #E3DFD2' }}
+            >
+              {/* TODO: real sales agent photo */}
+              <div
+                className="rounded-full shrink-0"
+                style={{ width: '46px', height: '46px', background: '#F4F1E8', border: '1px solid #DDD8CA' }}
+              />
+              <div>
+                <p className="font-bold text-hyde-forest" style={{ fontSize: '14.5px' }}>
+                  {SALES_AGENT_NAME}
+                </p>
+                <p style={{ fontSize: '13px', color: '#6b7269' }}>
+                  هو اللي هيتواصل معاك — {config.phoneDisplay || config.phoneNumber}
+                </p>
+              </div>
+            </div>
+          </form>
         </motion.div>
       </div>
     </section>
@@ -336,4 +308,3 @@ const LeadForm = () => {
 };
 
 export default LeadForm;
-

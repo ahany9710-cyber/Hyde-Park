@@ -8,12 +8,12 @@ export const config = {
   // Formspree form ID (form submissions go to the email registered at formspree.io)
   formspreeFormId: 'meelayjw',
 
-  // رقم الواتساب (بدون + أو مسافات لاستخدامه في wa.me)
-  // WhatsApp number (without + or spaces for wa.me links)
-  whatsappNumber: '01055550570',
+  // رقم الواتساب بالصيغة الدولية بدون + أو صفر بادئ (wa.me يرفض 01...)
+  // WhatsApp number in international format, no + and no leading zero (wa.me rejects 01...)
+  whatsappNumber: '201055550570',
 
-  // رقم الموبايل للمكالمات (مع + للمكالمات)
-  // Phone number for calls (with + for tel: links)
+  // رقم الموبايل للمكالمات (الصيغة المحلية أنسب لـ tel: داخل مصر)
+  // Phone number for calls (local format works best for tel: inside Egypt)
   phoneNumber: '01055550570',
 
   // تنسيق رقم الموبايل للعرض (اختياري - لو فاضي يستخدم phoneNumber)
@@ -32,6 +32,11 @@ export const config = {
   // رمز التحويل من إعدادات التحويل في Google Ads - يُستخدم في صفحة الشكر فقط
   // Conversion label from Google Ads - used on thank-you page only
   conversion_label: '19hmCPvcm_kbELGfoMpC',
+
+  // رموز تحويل منفصلة لكل قناة - سيبها فاضية لحد ما تنشئها في Google Ads
+  // Separate conversion labels per channel - leave empty until created in Google Ads
+  conversion_label_call: '',
+  conversion_label_whatsapp: '',
 
   // ——— الفيديوهات (اختياري - للاستضافة الخارجية) ———
   // لو فاضي: يستخدم الملفات من public (./hero-video.mp4، ./location.mp4)

@@ -9,6 +9,10 @@ export const config: {
   conversion_id: string;
   /** Conversion label - used on thank-you page only */
   conversion_label: string;
+  /** Conversion label for tel: taps; empty disables the event */
+  conversion_label_call: string;
+  /** Conversion label for wa.me taps; empty disables the event */
+  conversion_label_whatsapp: string;
   /** Optional: external URL for hero video; if empty, uses ./hero-video.mp4 from public */
   heroVideoUrl: string;
   /** Optional: external URL for hero poster image; if empty, uses ./video-poster.jpg from public */

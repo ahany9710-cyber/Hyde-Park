@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { config } from '../config';
+import { trackChannelConversion } from '../utils/gtag';
 
 interface FAQItem {
   question: string;
@@ -16,7 +17,7 @@ const faqs: FAQItem[] = [
   {
     question: 'ما هي تفاصيل الـ EOI؟',
     answer:
-      'نحن نجمع الآن EOI للشقق في Hyde Park New Cairo بقيمة 100,000 جنيه قابلة للاسترداد، مع متوسطات سعرية أولية تبدأ من 7 إلى 9 مليون للغرفة الواحدة وحتى 16 إلى 20 مليون للدوبلكسات.',
+      'نحن نجمع الآن EOI للشقق في Hyde Park New Cairo بقيمة 100,000 جنيه قابلة للاسترداد. الأسعار المعلنة على كل وحدة هي الأسعار الرسمية الحالية، وهناك متوسطات مؤشرية لمرحلة الـ EOI غير نهائية وقابلة للتغيير: غرفة واحدة 7 إلى 9 مليون، غرفتين 9 إلى 11 مليون، ثلاث غرف 11 إلى 14 مليون، والدوبلكس 16 إلى 20 مليون. للتأكيد النهائي تواصل معنا.',
   },
   {
     question: 'كيف يمكنني زيارة الموقع؟',
@@ -101,6 +102,7 @@ const FAQ = () => {
                             يمكنك جدولة زيارة للموقع بالاتصال بنا على{' '}
                             <a
                               href={`tel:${config.phoneNumber}`}
+                              onClick={() => trackChannelConversion('call')}
                               className="text-hyde-forest font-semibold hover:underline"
                             >
                               {config.phoneDisplay || config.phoneNumber}
@@ -109,6 +111,7 @@ const FAQ = () => {
                           </p>
                           <a
                             href={`tel:${config.phoneNumber}`}
+                            onClick={() => trackChannelConversion('call')}
                             className="inline-flex items-center gap-2 px-6 py-3 bg-hyde-forest text-white rounded-xl font-semibold hover:bg-hyde-sage hover:text-hyde-forest transition-colors"
                           >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

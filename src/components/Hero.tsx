@@ -1,102 +1,100 @@
-import { motion } from 'framer-motion';
-import BrandLogo from './BrandLogo';
+import { config } from '../config';
+import { trackChannelConversion } from '../utils/gtag';
 
 const Hero = () => {
-  const scrollToForm = () => {
-    const formSection = document.getElementById('lead-form');
-    if (formSection) {
-      formSection.scrollIntoView({ behavior: 'smooth' });
-    }
+  const scrollToVisitRequest = () => {
+    document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <section id="project-highlights" className="w-full">
-      <div className="relative w-full min-h-[88vh] overflow-hidden">
+      <div className="relative w-full h-[520px] overflow-hidden">
         <img
           src="./images/one-hyde-park/hero-family.png"
           alt="One Hyde Park lifestyle"
           className="absolute inset-0 w-full h-full object-cover"
           fetchPriority="high"
         />
-        <div className="absolute inset-0 hero-gradient" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(31,51,36,0.82) 0%, rgba(31,51,36,0.34) 38%, rgba(31,51,36,0.86) 100%)',
+          }}
+        />
 
-        <div className="absolute inset-0 flex items-center justify-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-center px-4 max-w-4xl"
-          >
-            <div className="mb-8 flex justify-center">
-              <BrandLogo align="center" light />
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-xs sm:text-sm text-white/90 backdrop-blur-sm mb-5">
-              <span>New Launch</span>
-            </div>
-            <p className="font-display text-3xl md:text-4xl italic text-white/90 mb-3">
-              More Life Around Every Day
-            </p>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
-              Hyde Park New Cairo
+        <div className="relative z-10 h-full flex flex-col justify-between px-5 py-[22px] pb-[26px]">
+          <div className="flex flex-col items-start text-right leading-none">
+            <span className="font-display italic text-hyde-sage" style={{ fontSize: '40px' }}>
+              one
+            </span>
+            <span
+              className="text-white uppercase mt-1"
+              style={{ fontSize: '12px', letterSpacing: '0.34em' }}
+            >
+              Hyde Park · New Cairo
+            </span>
+          </div>
+
+          <div>
+            <h1
+              className="text-white font-bold mb-2.5"
+              style={{ fontSize: '29px', lineHeight: 1.25, textWrap: 'pretty' }}
+            >
+              شقق وفيلات على 238 فدان في هايد بارك التجمع الخامس
             </h1>
-            <p className="text-base md:text-lg text-white/80 mb-8 max-w-2xl mx-auto leading-relaxed">
-              مجتمع جديد على مساحة 238 فدان يقدّم شقق 1 إلى 4 غرف، دوبلكسات، جاردن فيلا، سكاي فيلا،
-              مع مرحلة فيلات مستقلة وخطط سداد مرنة تناسب كل احتياج.
-            </p>
-            <div className="flex flex-wrap items-end justify-center gap-6 md:gap-10 mb-8 text-white">
-              <div>
-                <div className="font-display text-6xl md:text-7xl italic text-hyde-sage leading-none">5%</div>
-                <div className="text-sm md:text-lg uppercase tracking-wide">Down Payment</div>
-              </div>
-              <div>
-                <div className="font-display text-6xl md:text-7xl italic text-hyde-sage leading-none">10</div>
-                <div className="text-sm md:text-lg uppercase tracking-wide">Year Installments</div>
-              </div>
-            </div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-            >
-              <motion.button
-                onClick={scrollToForm}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-hyde-forest text-white rounded-2xl hover:bg-hyde-sage hover:text-hyde-forest transition-all duration-200 font-semibold shadow-xl text-lg"
-              >
-                اطلب الأسعار والبروشور
-              </motion.button>
-            </motion.div>
-          </motion.div>
-        </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="text-white"
-          >
-            <svg
-              className="w-6 h-6 mx-auto"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 14l-7 7m0 0l-7-7m7 7V3"
-              />
-            </svg>
-          </motion.div>
-        </motion.div>
+            <div className="flex items-baseline gap-2 mb-4">
+              <span className="font-display italic text-hyde-sage leading-none" style={{ fontSize: '46px' }}>
+                5%
+              </span>
+              <span className="text-white font-semibold" style={{ fontSize: '16px' }}>
+                مقدم · تقسيط 10 سنوات
+              </span>
+            </div>
+
+            <div className="grid gap-2.5">
+              <a
+                href={`https://wa.me/${config.whatsappNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackChannelConversion('whatsapp')}
+                className="w-full min-h-[54px] rounded-[14px] bg-hyde-sage text-hyde-forest font-bold flex items-center justify-center text-center"
+                style={{ fontSize: '17px' }}
+              >
+                الأسعار وخطة السداد على واتساب
+              </a>
+              <button
+                type="button"
+                onClick={scrollToVisitRequest}
+                className="w-full min-h-[50px] rounded-[14px] bg-transparent text-white font-semibold flex items-center justify-center text-center"
+                style={{ fontSize: '15.5px', border: '1.5px solid rgba(255,255,255,0.6)' }}
+              >
+                حدد ميعاد زيارة
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Trust strip */}
+      <div
+        dir="rtl"
+        className="bg-white flex flex-wrap items-center"
+        style={{
+          padding: '14px 16px',
+          borderBottom: '1px solid #E3DFD2',
+          gap: '6px 14px',
+          fontSize: '12.5px',
+          color: '#4b524a',
+        }}
+      >
+        <span>Hyde Park Developments</span>
+        <span className="text-hyde-gold">·</span>
+        <span>EOI 100,000 ج قابل للاسترداد</span>
+        <span className="text-hyde-gold">·</span>
+        <span>تسليم الفيلات 4 سنوات</span>
+        {/* TODO: add brokerage name and real estate licence number here */}
       </div>
     </section>
   );

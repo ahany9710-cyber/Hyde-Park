@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { config } from '../config';
+import { trackChannelConversion } from '../utils/gtag';
 import BrandLogo from './BrandLogo';
 
 const NAV_LINKS = [
@@ -34,8 +35,8 @@ const Header = () => {
     <motion.header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         scrolled
-          ? 'bg-white/88 backdrop-blur-md shadow-sm'
-          : 'bg-hyde-forest/15 backdrop-blur-sm'
+          ? 'bg-white/88 backdrop-blur-md shadow-sm opacity-100 pointer-events-auto'
+          : 'bg-transparent opacity-0 pointer-events-none lg:opacity-100 lg:pointer-events-auto lg:bg-hyde-forest/15 lg:backdrop-blur-sm'
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -59,6 +60,7 @@ const Header = () => {
             ))}
             <a
               href={`tel:${config.phoneNumber}`}
+              onClick={() => trackChannelConversion('call')}
               className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-hyde-forest transition-colors"
             >
               اتصل بنا
@@ -67,6 +69,7 @@ const Header = () => {
               href={`https://wa.me/${config.whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackChannelConversion('whatsapp')}
               className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-hyde-forest transition-colors"
             >
               واتساب
