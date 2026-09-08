@@ -60,7 +60,7 @@ const ThankYou = () => {
 
   const vCardHref = () => {
     // TODO: swap in the real sales agent name once provided.
-    const vcard = buildVCard('One Hyde Park — فريق المبيعات', `+20${config.phoneNumber.replace(/^0/, '')}`);
+    const vcard = buildVCard(`${config.brokerName} — فريق المبيعات`, `+20${config.phoneNumber.replace(/^0/, '')}`);
     return `data:text/vcard;charset=utf-8,${encodeURIComponent(vcard)}`;
   };
 
@@ -94,7 +94,7 @@ const ThankYou = () => {
             شكرًا، تم استلام طلبك.
           </h1>
           <p className="text-gray-600 text-lg mb-8">
-            فريق المبيعات سيتواصل معك قريبًا لتأكيد الأسعار الحالية والبروشور وتفاصيل الـ EOI.
+            فريق {config.brokerName} سيتواصل معك قريبًا لتأكيد الأسعار المتاحة والبروشور وتفاصيل الـ EOI.
           </p>
 
           <div className="space-y-4 mb-10">
@@ -135,7 +135,7 @@ const ThankYou = () => {
               download="one-hyde-park-sales.vcf"
               className="block w-full px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:border-hyde-sage hover:text-hyde-forest transition-colors font-semibold"
             >
-              احفظ رقم المبيعات في جهات الاتصال
+              احفظ جهة اتصال {config.brokerName}
             </a>
 
             <Link

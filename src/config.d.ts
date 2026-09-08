@@ -1,4 +1,6 @@
 export const config: {
+  brokerName: string;
+  developerName: string;
   formspreeFormId: string;
   whatsappNumber: string;
   phoneNumber: string;

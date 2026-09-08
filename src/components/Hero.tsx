@@ -89,12 +89,11 @@ const Hero = () => {
           color: '#4b524a',
         }}
       >
-        <span>Hyde Park Developments</span>
+        <span>{config.brokerName}</span>
         <span className="text-hyde-gold">·</span>
-        <span>EOI 100,000 ج قابل للاسترداد</span>
+        <span>وسيط عقاري مستقل</span>
         <span className="text-hyde-gold">·</span>
-        <span>تسليم الفيلات 4 سنوات</span>
-        {/* TODO: add brokerage name and real estate licence number here */}
+        <span>المشروع من تطوير {config.developerName}</span>
       </div>
     </section>
   );

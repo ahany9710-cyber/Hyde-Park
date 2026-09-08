@@ -22,8 +22,8 @@ const Footer = () => {
           >
             <BrandLogo light className="mb-4" />
             <p className="text-gray-400 leading-relaxed">
-              One Hyde Park في Hyde Park New Cairo يجمع بين الشقق والفيلات في مجتمع عصري تحيطه المساحات
-              الخضراء والخدمات اليومية وخطط سداد مرنة تناسب أنماط الحياة المختلفة.
+              صفحة تعريفية من {config.brokerName} عن مشروع One Hyde Park في Hyde Park New Cairo، تعرض
+              الوحدات المتاحة وخطط السداد وفق المعلومات المتاحة لدينا كوسيط عقاري مستقل.
             </p>
           </motion.div>
 
@@ -52,7 +52,7 @@ const Footer = () => {
                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                   />
                 </svg>
-                <span dir="ltr">{config.phoneDisplay || config.phoneNumber}</span>
+                <span>اتصل بنا</span>
               </a>
               <a
                 href={`https://wa.me/${config.whatsappNumber}`}
@@ -112,11 +112,15 @@ const Footer = () => {
           className="mt-12 pt-8 border-t border-gray-800 text-center text-sm text-gray-400"
         >
           <p>
-            &copy; {new Date().getFullYear()} Hyde Park Developments. جميع الحقوق محفوظة.
+            &copy; {new Date().getFullYear()} {config.brokerName}. جميع الحقوق محفوظة.
           </p>
           <p className="mt-2">
-            إخلاء المسؤولية: جميع المعلومات المقدمة قابلة للتغيير. يرجى
-            الاتصال بنا للحصول على أحدث الأسعار والتوفر.
+            إخلاء المسؤولية: هذه الصفحة مقدمة من {config.brokerName}، وهي شركة وساطة عقارية مستقلة. نحن
+            لسنا {config.developerName} ولا نمثل الإدارة الرسمية للمطوّر. المعلومات والأسعار وخطط السداد
+            المعروضة لأغراض تعريفية وتسويقية فقط، وقد تتغير وفق تحديثات المطوّر والتوافر وقت التواصل.
+          </p>
+          <p className="mt-2">
+            تُستخدم بيانات التواصل فقط للرد على استفسارك عن المشروع عبر فريق {config.brokerName}.
           </p>
         </motion.div>
       </div>

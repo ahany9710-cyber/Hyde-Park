@@ -4,6 +4,14 @@
  */
 
 export const config = {
+  // اسم الوسيط الظاهر على الصفحة
+  // Broker / agency name shown on the page
+  brokerName: 'Flair Agency',
+
+  // اسم المطوّر للذكر التعريفي فقط
+  // Developer name for descriptive references only
+  developerName: 'Hyde Park Developments',
+
   // معرف فورم Formspree (الفورم يبعت على الإيميل المسجل في formspree.io)
   // Formspree form ID (form submissions go to the email registered at formspree.io)
   formspreeFormId: 'meelayjw',

@@ -143,7 +143,7 @@ const LeadForm = () => {
             استلم الأسعار وخطة السداد
           </h3>
           <p className="mb-5" style={{ fontSize: '14.5px', lineHeight: 1.6, color: '#5a6158' }}>
-            رقمك فقط — نبعتلك الأسعار الحالية والبروشور على واتساب.
+            رقمك فقط — يرسل لك فريق {config.brokerName} الأسعار الحالية والبروشور على واتساب.
           </p>
 
           <form onSubmit={handleSubmit} noValidate>
@@ -279,7 +279,7 @@ const LeadForm = () => {
             </motion.button>
 
             <p className="text-center mt-3" style={{ fontSize: '13px', lineHeight: 1.6, color: '#6b7269' }}>
-              اتصال خلال 15 دقيقة في أوقات العمل · بياناتك لا تُشارك مع أي طرف آخر
+              نحاول التواصل في أقرب وقت خلال ساعات العمل · تُستخدم بياناتك للرد على استفسارك عن المشروع عبر {config.brokerName}
             </p>
 
             <div
@@ -293,10 +293,10 @@ const LeadForm = () => {
               />
               <div>
                 <p className="font-bold text-hyde-forest" style={{ fontSize: '14.5px' }}>
-                  {SALES_AGENT_NAME}
+                  {SALES_AGENT_NAME} - {config.brokerName}
                 </p>
                 <p style={{ fontSize: '13px', color: '#6b7269' }}>
-                  هو اللي هيتواصل معاك — {config.phoneDisplay || config.phoneNumber}
+                  هو اللي هيتواصل معاك — اتصل بنا
                 </p>
               </div>
             </div>
