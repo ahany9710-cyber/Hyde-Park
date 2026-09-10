@@ -2,7 +2,6 @@ import Hero from '../components/Hero';
 import HeroInfoCard from '../components/HeroInfoCard';
 import ListingsCarousel from '../components/ListingsCarousel';
 import LeadForm from '../components/LeadForm';
-import FAQ from '../components/FAQ';
 import { apartmentListings } from '../data/listings';
 import { villaListings } from '../data/villas';
 
@@ -28,7 +27,6 @@ const Landing = () => {
         listings={villaListings}
       />
       <LeadForm />
-      <FAQ />
     </main>
   );
 };
