@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
 import Footer from './components/Footer';
 import FloatingActionBar from './components/FloatingActionBar';
 import Landing from './pages/Landing';
@@ -13,7 +12,6 @@ function App() {
           path="/"
           element={
             <div className="min-h-screen bg-white pb-24 md:pb-0">
-              <Header />
               <Landing />
               <Footer />
               <FloatingActionBar />
