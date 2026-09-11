@@ -3,6 +3,7 @@ import Footer from './components/Footer';
 import FloatingActionBar from './components/FloatingActionBar';
 import Landing from './pages/Landing';
 import ThankYou from './pages/ThankYou';
+import MV11Landing from './pages/mv11/MV11Landing';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             </div>
           }
         />
+        <Route path="/mv-1-1" element={<MV11Landing />} />
         <Route path="/thank-you" element={<ThankYou />} />
       </Routes>
     </BrowserRouter>
