@@ -192,14 +192,6 @@ export function MVLeadForm({ source, formId = "lf", className, onSuccess }: MVLe
         <div className="fineprint">
           نحاول التواصل في أقرب وقت خلال ساعات العمل. بياناتك للرد على استفسارك فقط عبر Flair Agency — بروكر وليست المطوّر.
         </div>
-
-        <div className="agent-row">
-          <span className="agent-avatar" aria-hidden />
-          <div>
-            <strong>مسؤول المبيعات - {config.brokerName}</strong>
-            <span>هو اللي هيتواصل معاك — اتصل بنا</span>
-          </div>
-        </div>
       </form>
     </>
   );
