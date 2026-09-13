@@ -87,14 +87,6 @@ function WhatsAppIcon({ size = 18 }: { size?: number }) {
   );
 }
 
-function CheckIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-      <path d="M5 13l4 4L19 7" />
-    </svg>
-  );
-}
-
 export default function MV11Landing() {
   const [heroIdx, setHeroIdx] = useState(0);
   const [heroFading, setHeroFading] = useState(false);
@@ -307,28 +299,7 @@ export default function MV11Landing() {
       </section>
 
       <section className="s lead" id="lead">
-        <div className="wrap lead-grid">
-          <div className="lead-left">
-            <div className="eyebrow">Get Details</div>
-            <h2>سيب بياناتك، ونبعتلك التفاصيل</h2>
-            <p>
-              فريق Flair Agency هيبعتلك جدول الوحدات والأسعار الاسترشادية وخطط السداد.
-              التواصل للاستفسار فقط وبدون أي التزام — والعرض النهائي من المطوّر.
-            </p>
-            <ul className="lead-perks">
-              {[
-                "جدول أسعار استرشادي لكل نوع وحدة",
-                "توضيح خطط السداد المعلنة",
-                "تنسيق معاينة عند الإمكان",
-                "تأكيد التوفر قبل أي حجز",
-              ].map((t) => (
-                <li key={t}>
-                  <span className="check"><CheckIcon /></span>
-                  <span>{t}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className="wrap">
           <div className="lead-card">
             <MVLeadForm source="mv11-lead-flair-newcairo" formId="lf" />
           </div>
