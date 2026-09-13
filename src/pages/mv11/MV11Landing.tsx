@@ -353,8 +353,7 @@ export default function MV11Landing() {
               <span>راسلنا على واتساب</span>
             </a>
             <a className="final-card" href="#lead">
-              <strong>FORM</strong>
-              <span>استمارة سريعة</span>
+              <span>احجز زيارة للكمبوند من أرض الواقع</span>
             </a>
           </div>
         </div>

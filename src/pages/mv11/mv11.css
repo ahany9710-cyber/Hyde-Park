@@ -737,7 +737,12 @@
   font-size: 11px; letter-spacing: .14em;
   opacity: .6;
 }
-.mv-page .final-card span { font-weight: 700; font-size: 15px; }
+.mv-page .final-card span {
+  font-weight: 700;
+  font-size: 15px;
+  text-align: center;
+  line-height: 1.45;
+}
 @media(max-width:640px) {
   .mv-page .final-cards { grid-template-columns: 1fr; }
 }
