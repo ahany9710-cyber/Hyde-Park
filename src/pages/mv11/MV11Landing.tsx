@@ -341,7 +341,6 @@ export default function MV11Landing() {
             <small>Flair Agency · Mountain View 1.1</small>
             تحب تكلمنا إزاي؟
           </h2>
-          <p>تواصل مع مستشار Flair Agency لتفاصيل الوحدات والأسعار الاسترشادية.</p>
           <div className="final-cards">
             <a className="final-card" href={CALL_HREF}>
               <PhoneIcon size={22} />
