@@ -603,10 +603,11 @@
   display: flex; flex-wrap: wrap; gap: 8px;
 }
 :is(.mv-page, .mv-lead-popup-root) .chip {
-  padding: 8px 14px;
+  padding: 11px 15px;
   border: 1px solid var(--mv-grey-200);
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 14px;
+  background: #fff;
   cursor: pointer;
   transition: all .15s;
   user-select: none;
@@ -616,6 +617,60 @@
 }
 :is(.mv-page, .mv-lead-popup-root) .chip.active {
   background: var(--mv-blue); color: #fff; border-color: var(--mv-blue);
+}
+.mv-page .phone-row {
+  display: flex; align-items: center; gap: 10px;
+  border: 1.5px solid var(--mv-navy);
+  border-radius: 13px;
+  padding: 0 12px;
+  background: #fff;
+}
+.mv-page .phone-row.invalid { border-color: #c41e3a; }
+.mv-page .phone-row .cc {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px; color: var(--mv-slate); flex: none;
+}
+.mv-page .phone-row .sep {
+  width: 1px; height: 26px; background: var(--mv-grey-200); flex: none;
+}
+.mv-page .phone-row input {
+  flex: 1; border: 0 !important; box-shadow: none !important;
+  padding: 14px 0 !important; min-height: 52px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 17px; background: transparent;
+}
+.mv-page .contact-methods {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.mv-page .contact-methods .method {
+  min-height: 50px; border-radius: 13px;
+  border: 1.5px solid var(--mv-grey-200);
+  background: #fff; font: inherit; font-weight: 600; font-size: 15px;
+  cursor: pointer;
+}
+.mv-page .contact-methods .method.active {
+  background: var(--mv-blue); color: #fff; border-color: var(--mv-blue); font-weight: 800;
+}
+.mv-page .lead-card .btn-submit {
+  border-radius: 14px; min-height: 56px; font-size: 17px; margin-top: 4px;
+}
+.mv-page .lead-card .form-err {
+  color: #c41e3a; font-size: 13.5px; margin: 0 0 8px;
+}
+.mv-page .agent-row {
+  display: flex; align-items: center; gap: 12px;
+  margin-top: 18px; padding-top: 16px;
+  border-top: 1px solid var(--mv-line);
+}
+.mv-page .agent-avatar {
+  width: 46px; height: 46px; border-radius: 50%; flex: none;
+  background: var(--mv-grey-50); border: 1px solid var(--mv-grey-200);
+}
+.mv-page .agent-row strong {
+  display: block; font-size: 14.5px; color: var(--mv-navy-deep);
+}
+.mv-page .agent-row span {
+  display: block; font-size: 13px; color: var(--mv-grey-400);
 }
 :is(.mv-page, .mv-lead-popup-root) .btn-submit {
   width: 100%;

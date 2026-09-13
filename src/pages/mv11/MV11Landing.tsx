@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { MVLeadForm } from "./MVLeadForm";
-import { MVLeadPopup } from "./MVLeadPopup";
 import { config } from "../../config";
 import "./mv11.css";
 
@@ -99,17 +98,6 @@ function CheckIcon() {
 export default function MV11Landing() {
   const [heroIdx, setHeroIdx] = useState(0);
   const [heroFading, setHeroFading] = useState(false);
-  const [popupOpen, setPopupOpen] = useState(false);
-
-  const openLeadPopup = useCallback(() => setPopupOpen(true), []);
-  const closeLeadPopup = useCallback(() => {
-    setPopupOpen(false);
-    try {
-      sessionStorage.setItem("mv11-popup-dismissed", "1");
-    } catch {
-      /* ignore */
-    }
-  }, []);
 
   const switchHero = useCallback((next: number) => {
     setHeroFading(true);
@@ -129,35 +117,6 @@ export default function MV11Landing() {
     }, 6000);
     return () => clearInterval(id);
   }, [heroIdx, switchHero]);
-
-  useEffect(() => {
-    let dismissed = false;
-    try {
-      dismissed = sessionStorage.getItem("mv11-popup-dismissed") === "1";
-    } catch {
-      /* ignore */
-    }
-    if (dismissed) return;
-
-    let opened = false;
-    const openOnce = () => {
-      if (opened) return;
-      opened = true;
-      setPopupOpen(true);
-    };
-
-    const timer = setTimeout(openOnce, 20000);
-    const onScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (docHeight > 0 && scrollTop / docHeight >= 0.8) openOnce();
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, []);
 
   return (
     <div className="mv-page" dir="rtl" lang="ar">
@@ -259,9 +218,9 @@ export default function MV11Landing() {
                     ) : null}
                   </div>
                   <div className="unit-cta">
-                    <button type="button" className="btn btn-call" onClick={openLeadPopup}>
+                    <a className="btn btn-call" href="#lead">
                       احجز استشارة
-                    </button>
+                    </a>
                   </div>
                 </div>
               </article>
@@ -442,8 +401,6 @@ export default function MV11Landing() {
           </a>
         </div>
       </nav>
-
-      <MVLeadPopup open={popupOpen} onClose={closeLeadPopup} />
     </div>
   );
 }

@@ -22,3 +22,9 @@ export const config: {
   /** Optional: external URL for map video; if empty, uses ./location.mp4 from public */
   mapVideoUrl: string;
 };
+
+declare global {
+  interface Window {
+    __OHP_BASENAME__?: string;
+  }
+}

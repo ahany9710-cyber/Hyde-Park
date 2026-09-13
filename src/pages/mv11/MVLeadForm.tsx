@@ -1,65 +1,76 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { isValidEgyptPhone, normalizePhone } from "./validation";
+import { config } from "../../config";
 
 const FORMSPREE = "https://formspree.io/f/xqpkjjjn";
+
+const UNIT_OPTIONS = [
+  "Millennial",
+  "I-Villa",
+  "Town House",
+  "Luxury Villa",
+  "Crown Palace",
+  "لسه بختار",
+] as const;
+
+type UnitOption = (typeof UNIT_OPTIONS)[number];
+type ContactMethod = "whatsapp" | "call";
+
+function sanitizePhoneInput(raw: string): string {
+  let digits = raw.replace(/[^\d]/g, "");
+  if (digits.startsWith("0020")) digits = digits.slice(4);
+  else if (digits.startsWith("20") && digits.length > 10) digits = digits.slice(2);
+  if (digits.length === 10 && !digits.startsWith("0")) digits = `0${digits}`;
+  return digits.slice(0, 11);
+}
+
+function isValidEgyptianMobile(local: string): boolean {
+  return /^01[0125][0-9]{8}$/.test(local);
+}
 
 interface MVLeadFormProps {
   source: string;
   formId?: string;
   className?: string;
   onSuccess?: () => void;
-  showHeading?: boolean;
 }
 
-export function MVLeadForm({
-  source,
-  formId = "lf",
-  className,
-  onSuccess,
-  showHeading = true,
-}: MVLeadFormProps) {
+export function MVLeadForm({ source, formId = "lf", className, onSuccess }: MVLeadFormProps) {
   const navigate = useNavigate();
-  const [budget, setBudget] = useState<string | null>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const [phone, setPhone] = useState("");
+  const [unit, setUnit] = useState<UnitOption | "">("");
+  const [contactMethod, setContactMethod] = useState<ContactMethod>("whatsapp");
   const [formSubmitting, setFormSubmitting] = useState(false);
-  const [formErrors, setFormErrors] = useState<{ phone?: string; form?: string }>(
-    {},
-  );
+  const [formErrors, setFormErrors] = useState<{ phone?: string; form?: string }>({});
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const form = e.currentTarget;
-    const name = (form.elements.namedItem("name") as HTMLInputElement).value.trim();
-    const phone = (form.elements.namedItem("phone") as HTMLInputElement).value.trim();
-    const unitType = (form.elements.namedItem("type") as HTMLSelectElement).value;
-    const errors: { phone?: string } = {};
-
-    if (!phone.trim()) errors.phone = "رقم الموبايل مطلوب";
-    else if (!isValidEgyptPhone(phone)) {
-      errors.phone =
-        "رقم هاتف صحيح مطلوب (مصر، السعودية، البحرين، الإمارات، قطر)";
+    if (!isValidEgyptianMobile(phone)) {
+      setFormErrors({
+        phone: "رقم الموبايل غير صحيح — يرجى إدخال رقم مصري صحيح (01...)",
+      });
+      phoneRef.current?.focus();
+      return;
     }
-
-    setFormErrors(errors);
-    if (Object.keys(errors).length > 0) return;
 
     setFormSubmitting(true);
     setFormErrors({});
 
+    const e164 = `+20${phone.slice(1)}`;
     const payload: Record<string, string> = {
-      phone: normalizePhone(phone) || phone.trim(),
+      phone: e164,
       project_slug: "mountain-view-1-1",
       project_name: "ماونتن ڤيو ١.١",
       source,
-      approximate_budget: budget ?? "",
+      unit_interest: unit || "لسه بختار",
+      contact_method: contactMethod,
       agency: "Flair Agency",
       agency_role: "real-estate-broker",
       not_developer: "true",
       developer: "Mountain View",
-      _subject: `استفسار Flair Agency — ${name || "عميل"} — ماونتن ڤيو ١.١`,
+      _subject: `استفسار Flair Agency — ماونتن ڤيو ١.١`,
     };
-    if (name) payload.name = name;
-    if (unitType) payload.unit_interest = unitType;
 
     try {
       const res = await fetch(FORMSPREE, {
@@ -85,7 +96,7 @@ export function MVLeadForm({
       }
 
       onSuccess?.();
-      navigate("/thank-you", { state: { phone: payload.phone, unit: unitType || "ماونتن ڤيو ١.١" } });
+      navigate("/thank-you", { state: { phone: e164, unit: unit || "ماونتن ڤيو ١.١" } });
     } catch {
       setFormErrors({
         form: "حدث خطأ في الاتصال. تحقق من الإنترنت وحاول مجدداً.",
@@ -97,103 +108,97 @@ export function MVLeadForm({
 
   return (
     <>
-      {showHeading ? (
-        <>
-          <h3>طلب التفاصيل</h3>
-          <div className="sub">٣٠ ثانية فقط — استمارة قصيرة</div>
-        </>
-      ) : null}
-      <form
-        onSubmit={handleSubmit}
-        autoComplete="on"
-        className={className}
-        noValidate
-      >
-        <div className="row2c">
-          <div className="field">
-            <label htmlFor={`${formId}-name`}>
-              الاسم <span className="opt">(اختياري)</span>
-            </label>
+      <h3>استلم الأسعار وخطة السداد</h3>
+      <div className="sub">
+        رقمك فقط — يرسل لك فريق {config.brokerName} الأسعار الحالية والبروشور على واتساب.
+      </div>
+      <form onSubmit={handleSubmit} autoComplete="on" className={className} noValidate>
+        <div className="field">
+          <label htmlFor={`${formId}-phone`}>رقم الموبايل</label>
+          <div className={`phone-row${formErrors.phone ? " invalid" : ""}`}>
+            <span className="cc">+20</span>
+            <span className="sep" aria-hidden />
             <input
-              id={`${formId}-name`}
-              name="name"
-              type="text"
-              placeholder="اسمك بالكامل"
-              disabled={formSubmitting}
-            />
-          </div>
-          <div className="field">
-            <label htmlFor={`${formId}-phone`}>رقم الموبايل *</label>
-            <input
+              ref={phoneRef}
               id={`${formId}-phone`}
               name="phone"
               type="tel"
-              placeholder="01XXXXXXXXX"
-              inputMode="numeric"
-              required
+              inputMode="tel"
+              autoComplete="tel"
+              placeholder="010 5555 0570"
+              value={phone}
               disabled={formSubmitting}
+              aria-invalid={Boolean(formErrors.phone)}
+              onChange={(ev) => {
+                setPhone(sanitizePhoneInput(ev.target.value));
+                if (formErrors.phone) setFormErrors({});
+              }}
+              onPaste={(ev) => {
+                ev.preventDefault();
+                setPhone(sanitizePhoneInput(ev.clipboardData.getData("text")));
+                if (formErrors.phone) setFormErrors({});
+              }}
             />
-            <div className="err">{formErrors.phone || ""}</div>
           </div>
+          {formErrors.phone ? <div className="err">{formErrors.phone}</div> : null}
         </div>
+
         <div className="field">
-          <label htmlFor={`${formId}-type`}>
-            نوع الوحدة المطلوبة <span className="opt">(اختياري)</span>
-          </label>
-          <select id={`${formId}-type`} name="type" defaultValue="" disabled={formSubmitting}>
-            <option value="">— مش محدد —</option>
-            <option>Millennial — 140 م²</option>
-            <option>I-Villa Sky Garden — 235–255 م²</option>
-            <option>Town House — 210 م²</option>
-            <option>Luxury Villa — 255–350 م²</option>
-            <option>Crown Palace — 670 م²</option>
-            <option>غير متأكد بعد — محتاج استشارة</option>
-          </select>
-        </div>
-        <div className="field">
-          <label>
-            الميزانية التقريبية <span className="opt">(اختياري)</span>
-          </label>
+          <label>الوحدة المهتم بها</label>
           <div className="budget-chips">
-            {[
-              "14–25 مليون",
-              "25–40 مليون",
-              "40–60 مليون",
-              "60 مليون+",
-              "أحتاج استشارة",
-            ].map((b) => (
-              <div
-                key={b}
-                className={`chip ${budget === b ? "active" : ""}`}
-                role="button"
-                tabIndex={0}
-                onClick={() => !formSubmitting && setBudget(b)}
-                onKeyDown={(ev) => {
-                  if ((ev.key === "Enter" || ev.key === " ") && !formSubmitting)
-                    setBudget(b);
-                }}
+            {UNIT_OPTIONS.map((option) => (
+              <button
+                key={option}
+                type="button"
+                className={`chip${unit === option ? " active" : ""}`}
+                aria-pressed={unit === option}
+                disabled={formSubmitting}
+                onClick={() => setUnit(option)}
               >
-                {b}
-              </div>
+                {option}
+              </button>
             ))}
           </div>
         </div>
-        {formErrors.form ? (
-          <p style={{ color: "#c41e3a", fontSize: 14, margin: "0 0 8px" }}>
-            {formErrors.form}
-          </p>
-        ) : null}
+
+        <div className="field">
+          <label>تحب نتواصل إزاي؟</label>
+          <div className="contact-methods">
+            {(
+              [
+                { id: "whatsapp", label: "واتساب" },
+                { id: "call", label: "مكالمة" },
+              ] as { id: ContactMethod; label: string }[]
+            ).map((method) => (
+              <button
+                key={method.id}
+                type="button"
+                className={`method${contactMethod === method.id ? " active" : ""}`}
+                aria-pressed={contactMethod === method.id}
+                disabled={formSubmitting}
+                onClick={() => setContactMethod(method.id)}
+              >
+                {method.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {formErrors.form ? <p className="form-err">{formErrors.form}</p> : null}
+
         <button className="btn-submit" type="submit" disabled={formSubmitting}>
-          <span>
-            {formSubmitting ? "جاري الإرسال…" : "ابعتلي التفاصيل من Flair Agency"}
-          </span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width={18} height={18}>
-            <path d="M5 12 H19 M19 12 L13 6 M19 12 L13 18" />
-          </svg>
+          {formSubmitting ? "جاري الإرسال…" : "ابعت الأسعار والبروشور"}
         </button>
         <div className="fineprint">
-          بإرسال النموذج توافق على تواصل Flair Agency معك بخصوص وحدات ماونتن ڤيو ١.١.
-          نحن بروكر تسويق عقاري بشراكة مع المطوّر ولسنا ماونتن ڤيو.
+          نحاول التواصل في أقرب وقت خلال ساعات العمل. بياناتك للرد على استفسارك فقط عبر Flair Agency — بروكر وليست المطوّر.
+        </div>
+
+        <div className="agent-row">
+          <span className="agent-avatar" aria-hidden />
+          <div>
+            <strong>مسؤول المبيعات - {config.brokerName}</strong>
+            <span>هو اللي هيتواصل معاك — اتصل بنا</span>
+          </div>
         </div>
       </form>
     </>
