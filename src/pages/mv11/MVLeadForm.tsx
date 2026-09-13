@@ -1,7 +1,5 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { config } from "../../config";
-
 const FORMSPREE = "https://formspree.io/f/xqpkjjjn";
 
 const UNIT_OPTIONS = [
@@ -110,7 +108,7 @@ export function MVLeadForm({ source, formId = "lf", className, onSuccess }: MVLe
     <>
       <h3>استلم الأسعار وخطة السداد</h3>
       <div className="sub">
-        رقمك فقط — يرسل لك فريق {config.brokerName} الأسعار الحالية والبروشور على واتساب.
+        رقمك فقط — يرسل لك فريق المبيعات الأسعار الحالية والبروشور على واتساب.
       </div>
       <form onSubmit={handleSubmit} autoComplete="on" className={className} noValidate>
         <div className="field">
@@ -190,7 +188,7 @@ export function MVLeadForm({ source, formId = "lf", className, onSuccess }: MVLe
           {formSubmitting ? "جاري الإرسال…" : "ابعت الأسعار والبروشور"}
         </button>
         <div className="fineprint">
-          نحاول التواصل في أقرب وقت خلال ساعات العمل. بياناتك للرد على استفسارك فقط عبر Flair Agency — بروكر وليست المطوّر.
+          نحاول التواصل في أقرب وقت.
         </div>
       </form>
     </>
