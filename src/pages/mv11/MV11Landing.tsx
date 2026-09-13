@@ -100,10 +100,6 @@ export default function MV11Landing() {
   }, []);
 
   useEffect(() => {
-    document.title = "ماونتن ڤيو ١.١ | Flair Agency — بروكر بشراكة مع ماونتن ڤيو";
-  }, []);
-
-  useEffect(() => {
     const id = setInterval(() => {
       switchHero((heroIdx + 1) % HERO_IMAGES.length);
     }, 6000);

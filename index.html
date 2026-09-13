@@ -22,6 +22,58 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet" />
     <title>One Hyde Park | Flair Agency</title>
+    <script>
+      (function () {
+        var path = (location.pathname || '/').replace(/\/$/, '') || '/';
+        var base = (window.__OHP_BASENAME__ || '').replace(/\/$/, '');
+        if (base && path.indexOf(base) === 0) path = path.slice(base.length) || '/';
+        var page = {
+          title: 'One Hyde Park | Flair Agency',
+          description: 'صفحة تعريفية من Flair Agency عن مشروع One Hyde Park في هايد بارك التجمع الخامس. الأسعار وخطط السداد والمعلومات المعروضة استرشادية وتؤكد عند التواصل.',
+          image: 'images/one-hyde-park/hero-family.png',
+          icon: 'favicon.svg',
+          siteName: 'One Hyde Park'
+        };
+        if (path === '/mv-1-1' || path.indexOf('/mv-1-1/') === 0) {
+          page = {
+            title: 'ماونتن ڤيو ١.١ | Flair Agency',
+            description: 'صفحة تعريفية من Flair Agency عن ماونتن ڤيو ١.١. الأسعار وخطط السداد استرشادية وتُؤكد عند التواصل. Flair Agency وسيط عقاري وليست ماونتن ڤيو.',
+            image: 'projects/mountain-view-1-1/hero-signature.webp',
+            icon: 'favicon-mountain-view.svg',
+            siteName: 'Mountain View'
+          };
+        } else if (path === '/el-patio-townside' || path.indexOf('/el-patio-townside/') === 0) {
+          page = {
+            title: 'El Patio Townside | La Vista',
+            description: 'صفحة تعريفية من Flair Agency عن El Patio Townside من La Vista. الأسعار وخطط السداد استرشادية وتُؤكد عند التواصل. لسنا الموقع الرسمي لـ La Vista Developments.',
+            image: 'projects/el-patio-townside/images/gallery/evening.webp',
+            icon: 'favicon-lavista.svg',
+            siteName: 'La Vista'
+          };
+        }
+        var asset = function (file) { return new URL(file, document.baseURI).href; };
+        var setMeta = function (selector, attr, key, content) {
+          var tag = document.querySelector(selector);
+          if (!tag) {
+            tag = document.createElement('meta');
+            tag.setAttribute(attr, key);
+            document.head.appendChild(tag);
+          }
+          tag.setAttribute('content', content);
+        };
+        document.title = page.title;
+        setMeta('meta[name="description"]', 'name', 'description', page.description);
+        setMeta('meta[property="og:title"]', 'property', 'og:title', page.title);
+        setMeta('meta[property="og:description"]', 'property', 'og:description', page.description);
+        setMeta('meta[property="og:image"]', 'property', 'og:image', asset(page.image));
+        setMeta('meta[property="og:site_name"]', 'property', 'og:site_name', page.siteName);
+        setMeta('meta[name="twitter:title"]', 'name', 'twitter:title', page.title);
+        setMeta('meta[name="twitter:description"]', 'name', 'twitter:description', page.description);
+        setMeta('meta[name="twitter:image"]', 'name', 'twitter:image', asset(page.image));
+        var icon = document.querySelector('link[rel="icon"]');
+        if (icon) icon.href = asset(page.icon);
+      })();
+    </script>
     <script type="text/javascript">
       (function(c,l,a,r,i,t,y){
           c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};

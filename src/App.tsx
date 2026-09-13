@@ -1,4 +1,6 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { applyPageMeta } from './pageMeta';
 import Footer from './components/Footer';
 import FloatingActionBar from './components/FloatingActionBar';
 import Landing from './pages/Landing';
@@ -8,9 +10,18 @@ import TownsideHome from './pages/townside/TownsideHome';
 import TownsideThankYou from './pages/townside/pages/ThankYou';
 import TownsidePrivacy from './pages/townside/pages/Privacy';
 
+function PageMeta() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    applyPageMeta(pathname);
+  }, [pathname]);
+  return null;
+}
+
 function App() {
   return (
     <BrowserRouter>
+      <PageMeta />
       <Routes>
         <Route
           path="/"
