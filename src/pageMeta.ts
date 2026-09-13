@@ -16,10 +16,10 @@ const PAGES = {
     siteName: 'One Hyde Park',
   },
   mountainView: {
-    title: 'ماونتن ڤيو ١.١ | Flair Agency',
+    title: 'ماونتن ڤيو ١.١ عبر Flair Agency',
     description:
-      'صفحة تعريفية من Flair Agency عن ماونتن ڤيو ١.١. الأسعار وخطط السداد استرشادية وتُؤكد عند التواصل. Flair Agency وسيط عقاري وليست ماونتن ڤيو.',
-    image: 'projects/mountain-view-1-1/hero-signature.webp',
+      'صفحة تعريفية من Flair Agency عن ماونتن ڤيو ١.١. الأسعار وخطط السداد استرشادية وتُؤكد عند التواصل.',
+    image: 'og/mountain-view.jpg',
     icon: 'favicon-mountain-view.svg',
     siteName: 'Mountain View',
   },
@@ -27,7 +27,7 @@ const PAGES = {
     title: 'El Patio Townside | La Vista',
     description:
       'صفحة تعريفية من Flair Agency عن El Patio Townside من La Vista. الأسعار وخطط السداد استرشادية وتُؤكد عند التواصل. لسنا الموقع الرسمي لـ La Vista Developments.',
-    image: 'projects/el-patio-townside/images/gallery/evening.webp',
+    image: 'og/lavista.jpg',
     icon: 'favicon-lavista.svg',
     siteName: 'La Vista',
   },

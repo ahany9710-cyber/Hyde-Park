@@ -2,6 +2,9 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
+    { "source": "/mv-1-1", "destination": "/mv-1-1.html" },
+    { "source": "/el-patio-townside", "destination": "/el-patio-townside.html" },
+    { "source": "/el-patio-townside/:path*", "destination": "/el-patio-townside.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "trailingSlash": false
