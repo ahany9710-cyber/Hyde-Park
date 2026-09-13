@@ -345,7 +345,7 @@ export default function MV11Landing() {
             <a className="final-card" href={CALL_HREF}>
               <PhoneIcon size={22} />
               <strong>CALL</strong>
-              <span>اتصل بـ Flair Agency</span>
+              <span>اتصل بنا</span>
             </a>
             <a className="final-card" href={waHref(WA.inquiry)} target="_blank" rel="noopener noreferrer">
               <WhatsAppIcon size={22} />
