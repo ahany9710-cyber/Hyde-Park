@@ -309,7 +309,7 @@ export default function MV11Landing() {
       <section className="final" id="final">
         <div className="wrap">
           <h2>
-            <small>Flair Agency · Mountain View 1.1</small>
+            <small>Mountain View 1.1</small>
             تحب تكلمنا إزاي؟
           </h2>
           <div className="final-cards">
